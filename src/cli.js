@@ -9,10 +9,6 @@ import mri from 'mri';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Read version from package.json
-const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
-const version = packageJson.version;
-
 export const getColor = coverage => {
   if (coverage === 100) {
     return '49c31a';
@@ -118,7 +114,13 @@ const args = process.argv.slice(2);
 const { help, version: showVersion, ...params } = mri(args, options);
 
 if (showVersion) {
-  process.stdout.write(`${version}\n`);
+  try {
+    const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
+    process.stdout.write(`${packageJson.version}\n`);
+  } catch (err) {
+    process.stderr.write(`Error reading version: ${err.message}\n`);
+    process.exit(1);
+  }
   process.exit(0);
 }
 
