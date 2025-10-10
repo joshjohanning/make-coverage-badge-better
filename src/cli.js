@@ -5,6 +5,10 @@ import { readFile, writeFile, mkdir } from 'fs';
 import { basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import mri from 'mri';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json');
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -94,6 +98,7 @@ export const download = (url, cb) => {
 const options = {
   alias: {
     h: 'help',
+    v: 'version',
     outputPath: 'output-path',
     reportPath: 'report-path',
     labelColor: 'label-color',
@@ -101,7 +106,7 @@ const options = {
     logoWidth: 'logo-width',
     cacheSeconds: 'cache-seconds'
   },
-  boolean: 'help',
+  boolean: ['help', 'version'],
   default: {
     'output-path': './coverage/badge.svg',
     'report-path': './coverage/coverage-summary.json'
@@ -109,7 +114,12 @@ const options = {
 };
 
 const args = process.argv.slice(2);
-const { help, ...params } = mri(args, options);
+const { help, version: showVersion, ...params } = mri(args, options);
+
+if (showVersion) {
+  process.stdout.write(`${version}\n`);
+  process.exit();
+}
 
 if (help) {
   process.stdout.write(
@@ -117,6 +127,7 @@ if (help) {
 
 Options:
   -h, --help                Show this help message
+  -v, --version             Show version number
   --report-path <path>      Path to coverage report (default: ./coverage/coverage-summary.json)
   --output-path <path>      Output path for badge (default: ./coverage/badge.svg)
   --label-color <color>     Background color of the label (left side)
