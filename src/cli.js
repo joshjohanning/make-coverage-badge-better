@@ -155,8 +155,8 @@ const isMainModule = () => {
     const modulePath = realpathSync(__filename);
     return scriptPath === modulePath;
   } catch {
-    // Fallback check
-    return process.argv[1] && basename(process.argv[1]) === 'cli.js';
+    // Fallback check: match cli.js, or any file ending with 'cli.js' (e.g., npx temp files), or the package name
+    return process.argv[1] && /cli(\.[a-zA-Z0-9_-]+)?\.js$/.test(basename(process.argv[1]));
   }
 };
 
