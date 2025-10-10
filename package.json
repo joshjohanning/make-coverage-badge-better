@@ -1,7 +1,7 @@
 {
   "name": "@joshjohanning/make-coverage-badge-better",
   "version": "1.0.0",
-  "description": "Create a coverage badge",
+  "description": "Create a coverage badge - but better",
   "type": "module",
   "main": "src/cli.js",
   "bin": {
@@ -20,6 +20,7 @@
     "url": "https://github.com/joshjohanning/make-coverage-badge-better/issues"
   },
   "homepage": "https://github.com/joshjohanning/make-coverage-badge-better#readme",
+  "license": "MIT",
   "keywords": [
     "coverage",
     "badge",
@@ -42,7 +43,9 @@
   "files": [
     "src"
   ],
-  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "mri": "1.2.0"
   },
