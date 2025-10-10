@@ -2,12 +2,11 @@
 
 import { get } from 'https';
 import { readFile, readFileSync, writeFile, mkdir, realpathSync } from 'fs';
-import { basename, dirname, join } from 'path';
+import { basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import mri from 'mri';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export const getColor = coverage => {
   if (coverage === 100) {
@@ -115,7 +114,8 @@ const { help, version: showVersion, ...params } = mri(args, options);
 
 if (showVersion) {
   try {
-    const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'));
+    const packageJsonPath = new URL('../package.json', import.meta.url);
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
     process.stdout.write(`${packageJson.version}\n`);
   } catch (err) {
     process.stderr.write(`Error reading version: ${err.message}\n`);
@@ -148,6 +148,11 @@ Options:
 
 // Only run CLI when executed directly (not when imported as a module)
 // Check if this file is being run directly by comparing resolved paths
+
+// Matches 'cli.js' or 'cli.<random-id>.js' (npx creates temp files with random IDs)
+// Examples: 'cli.js', 'cli.abc123.js', 'cli.xyz-456.js'
+const CLI_FILENAME_PATTERN = /cli(\.[a-zA-Z0-9_-]+)?\.js$/;
+
 const isMainModule = () => {
   try {
     // Resolve both paths to handle symlinks (from npm link)
@@ -155,8 +160,8 @@ const isMainModule = () => {
     const modulePath = realpathSync(__filename);
     return scriptPath === modulePath;
   } catch {
-    // Fallback check: match cli.js, or any file ending with 'cli.js' (e.g., npx temp files), or the package name
-    return process.argv[1] && /cli(\.[a-zA-Z0-9_-]+)?\.js$/.test(basename(process.argv[1]));
+    // Fallback check: handle npx temp files and direct execution
+    return process.argv[1] && CLI_FILENAME_PATTERN.test(basename(process.argv[1]));
   }
 };
 
