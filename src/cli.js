@@ -115,7 +115,7 @@ const { help, version: showVersion, ...params } = mri(args, options);
 
 if (showVersion) {
   try {
-    const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
+    const packageJson = JSON.parse(readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'));
     process.stdout.write(`${packageJson.version}\n`);
   } catch (err) {
     process.stderr.write(`Error reading version: ${err.message}\n`);
