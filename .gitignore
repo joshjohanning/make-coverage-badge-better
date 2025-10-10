@@ -1,4 +1,30 @@
-node_modules
-npm-debug.log
-coverage
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage/
 .nyc_output
+
+# Cache
+.eslintcache
+.npm
+
+# Environment variables
+.env
+.env.test
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+._*
+Thumbs.db

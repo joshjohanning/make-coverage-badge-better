@@ -1,2 +1,6 @@
-dist/
 node_modules/
+dist/
+coverage/
+.nyc_output/
+*.min.js
+package-lock.json

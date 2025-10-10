@@ -1,17 +1,11 @@
-# make-coverage-badge
+# make-coverage-badge-better
 
-[![Build Status][travis-image]][travis-url]
-[![npm version][npm-image]][npm-url]
-[![License][license-image]][license-url]
+[![GitHub release](https://img.shields.io/github/release/joshjohanning/make-coverage-badge-better.svg?logo=github&labelColor=333)](https://github.com/joshjohanning/make-coverage-badge-better/releases)
+[![CI](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/ci.yml/badge.svg)](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/ci.yml)
+[![Publish GitHub Action](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/publish.yml/badge.svg)](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/publish.yml)
+![Coverage](./badges/coverage.svg)
 
-[travis-url]: https://travis-ci.org/tlvince/make-coverage-badge
-[travis-image]: https://img.shields.io/travis/tlvince/make-coverage-badge.svg
-[npm-url]: https://www.npmjs.com/package/make-coverage-badge
-[npm-image]: https://img.shields.io/npm/v/make-coverage-badge.svg
-[license-url]: https://opensource.org/licenses/MIT
-[license-image]: https://img.shields.io/npm/l/make-coverage-badge.svg
-
-> Create a coverage badge
+> Create a coverage badge - but better
 
 Creates a code coverage badge like the following:
 
@@ -20,6 +14,18 @@ Creates a code coverage badge like the following:
 Currently just reads from Istanbul's JSON summary reporter and downloads a badge from https://shields.io/. Don't expect too much! Send a PR if you need configuration etc.
 
 [coverage-badge]: https://img.shields.io/badge/Coverage-100%25-brightgreen.svg
+
+## Installation
+
+```bash
+npm install --save-dev @joshjohanning/make-coverage-badge-better
+```
+
+Or install globally:
+
+```bash
+npm install -g @joshjohanning/make-coverage-badge-better
+```
 
 ## Usage
 
@@ -36,9 +42,34 @@ Currently just reads from Istanbul's JSON summary reporter and downloads a badge
 ```
 
 2. Run `npm test -- --coverage`
-3. Run `make-coverage-badge`
+3. Run `make-coverage-badge-better`
 
 Resulting badge will be in `./coverage/badge.svg`.
+
+### Examples
+
+Create a badge with a GitHub logo and blue label:
+
+```bash
+make-coverage-badge-better --logo github --label-color blue
+```
+
+Create a badge with a custom style and logo color:
+
+```bash
+make-coverage-badge-better --style flat-square --logo javascript --logo-color yellow
+```
+
+Create a badge with all customizations:
+
+```bash
+make-coverage-badge-better \
+  --label-color "#0969da" \
+  --logo github \
+  --logo-color white \
+  --style for-the-badge \
+  --link "https://github.com/yourorg/yourrepo"
+```
 
 ## Options
 
@@ -49,6 +80,70 @@ Writes the coverage badge to the given path (relative to project root). Defaults
 ### `--report-path <path>`
 
 Path to a coverage report file. Defaults to `./coverage/coverage-summary.json`.
+
+### Badge Customization Options
+
+The following options allow you to customize the appearance of the badge using shields.io parameters:
+
+#### `--label-color <color>`
+
+Background color of the label (left side of the badge). Supports hex colors, named colors, etc.
+
+Example: `--label-color blue` or `--label-color "#0969da"`
+
+#### `--logo <slug>`
+
+Add a logo from [simple-icons](https://simpleicons.org/) to the badge.
+
+Example: `--logo github` or `--logo javascript`
+
+#### `--logo-color <color>`
+
+Color of the logo. Supports hex colors, named colors, etc.
+
+Example: `--logo-color white`
+
+#### `--logo-width <width>`
+
+Width of the logo in pixels.
+
+Example: `--logo-width 20`
+
+#### `--style <style>`
+
+Badge style. Available options:
+
+- `flat` (default)
+- `flat-square`
+- `plastic`
+- `for-the-badge`
+- `social`
+
+Example: `--style flat-square`
+
+#### `--prefix <text>`
+
+Text to prefix the coverage percentage.
+
+Example: `--prefix "v"`
+
+#### `--suffix <text>`
+
+Text to suffix the coverage percentage.
+
+Example: `--suffix " coverage"`
+
+#### `--cache-seconds <seconds>`
+
+HTTP cache duration in seconds.
+
+Example: `--cache-seconds 3600`
+
+#### `--link <url>`
+
+URL to link to when the badge is clicked. Can be used twice for separate left and right links.
+
+Example: `--link "https://github.com/yourorg/yourrepo"`
 
 ## Prior work
 
