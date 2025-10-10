@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 import { get } from 'https';
-import { readFile, writeFile, mkdir } from 'fs';
-import { basename, dirname } from 'path';
+import { readFile, readFileSync, writeFile, mkdir } from 'fs';
+import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import mri from 'mri';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-const { version } = require('../package.json');
 
 const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Read version from package.json
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
+const version = packageJson.version;
 
 export const getColor = coverage => {
   if (coverage === 100) {
