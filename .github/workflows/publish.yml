@@ -78,7 +78,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: NPM publish
-        run: npm publish *.tgz --provenance --access public
+        run: npm publish *.tgz --provenance
 
   publish_gh:
     needs: build
