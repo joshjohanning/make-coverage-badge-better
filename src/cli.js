@@ -144,46 +144,49 @@ Options:
   process.exit();
 }
 
-const {
-  outputPath,
-  'report-path': reportPath,
-  'label-color': labelColor,
-  logo,
-  'logo-color': logoColor,
-  'logo-width': logoWidth,
-  style,
-  prefix,
-  suffix,
-  'cache-seconds': cacheSeconds,
-  link
-} = params;
-
-readFile(reportPath, 'utf8', (err, res) => {
-  if (err) throw err;
-  const report = JSON.parse(res);
-
-  const badgeOptions = {
-    labelColor,
+// Only run CLI when executed directly (not when imported as a module)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const {
+    outputPath,
+    'report-path': reportPath,
+    'label-color': labelColor,
     logo,
-    logoColor,
-    logoWidth,
+    'logo-color': logoColor,
+    'logo-width': logoWidth,
     style,
     prefix,
     suffix,
-    cacheSeconds,
+    'cache-seconds': cacheSeconds,
     link
-  };
+  } = params;
 
-  const url = getBadge(report, badgeOptions);
-  download(url, (downloadErr, downloadRes) => {
-    if (downloadErr) throw downloadErr;
-    const dir = dirname(outputPath);
-    mkdir(dir, { recursive: true }, mkdirErr => {
-      if (mkdirErr) throw mkdirErr;
-      writeFile(outputPath, downloadRes, 'utf8', writeErr => {
-        if (writeErr) throw writeErr;
-        process.stdout.write(`Wrote coverage badge to: ${outputPath}\n`);
+  readFile(reportPath, 'utf8', (err, res) => {
+    if (err) throw err;
+    const report = JSON.parse(res);
+
+    const badgeOptions = {
+      labelColor,
+      logo,
+      logoColor,
+      logoWidth,
+      style,
+      prefix,
+      suffix,
+      cacheSeconds,
+      link
+    };
+
+    const url = getBadge(report, badgeOptions);
+    download(url, (downloadErr, downloadRes) => {
+      if (downloadErr) throw downloadErr;
+      const dir = dirname(outputPath);
+      mkdir(dir, { recursive: true }, mkdirErr => {
+        if (mkdirErr) throw mkdirErr;
+        writeFile(outputPath, downloadRes, 'utf8', writeErr => {
+          if (writeErr) throw writeErr;
+          process.stdout.write(`Wrote coverage badge to: ${outputPath}\n`);
+        });
       });
     });
   });
-});
+}
