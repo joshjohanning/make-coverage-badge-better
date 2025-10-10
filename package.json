@@ -1,56 +1,60 @@
 {
-  "name": "make-coverage-badge",
-  "version": "0.0.0-development",
+  "name": "@joshjohanning/make-coverage-badge-better",
+  "version": "1.0.0",
   "description": "Create a coverage badge",
-  "main": "cli.js",
-  "bin": "cli.js",
-  "scripts": {
-    "lint": "npm run eslint && npm run prettier -- --check",
-    "lint:fix": "npm run eslint -- --fix && npm run prettier -- --write",
-    "eslint": "eslint '**/*.{js,jsx,ts,tsx}'",
-    "prettier": "prettier '**/*.{js,jsx,ts,tsx,json,css,md}'",
-    "test": "./test.js",
-    "semantic-release": "semantic-release"
+  "type": "module",
+  "main": "src/cli.js",
+  "bin": {
+    "make-coverage-badge-better": "src/cli.js"
+  },
+  "author": {
+    "name": "Josh Johanning",
+    "email": "joshjohanning@github.com",
+    "url": "https://github.com/joshjohanning"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tlvince/make-coverage-badge.git"
+    "url": "git+https://github.com/joshjohanning/make-coverage-badge-better.git"
   },
+  "bugs": {
+    "url": "https://github.com/joshjohanning/make-coverage-badge-better/issues"
+  },
+  "homepage": "https://github.com/joshjohanning/make-coverage-badge-better#readme",
   "keywords": [
     "coverage",
     "badge",
-    "istanbul"
+    "istanbul",
+    "jest",
+    "testing"
   ],
-  "author": "Tom Vincent <git@tlvince.com> (https://tlvince.com)",
   "engines": {
-    "node": ">=6.11",
-    "npm": ">=5.3"
+    "node": ">=20"
   },
-  "bugs": {
-    "url": "https://github.com/tlvince/make-coverage-badge/issues"
-  },
-  "homepage": "https://github.com/tlvince/make-coverage-badge#readme",
-  "dependencies": {
-    "mri": "1.1.6"
-  },
-  "devDependencies": {
-    "eslint": "7.13.0",
-    "eslint-config-prettier": "6.15.0",
-    "eslint-plugin-prettier": "3.1.4",
-    "husky": "4.3.0",
-    "prettier": "2.1.2",
-    "semantic-release": "17.2.2",
-    "validate-commit-msg": "2.14.0"
+  "scripts": {
+    "coverage": "node ./src/cli.js --label-color '#333' --output-path ./badges/coverage.svg",
+    "format:write": "npx prettier --write .",
+    "format:check": "npx prettier --check .",
+    "lint": "npx eslint .",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest",
+    "ci-test": "NODE_OPTIONS='--experimental-vm-modules' npx jest --coverage",
+    "all": "npm run format:write && npm run lint && npm run ci-test && npm run coverage"
   },
   "files": [
-    "cli.js"
+    "src"
   ],
   "license": "MIT",
-  "husky": {
-    "hooks": {
-      "commit-msg": "validate-commit-msg",
-      "pre-commit": "eslint .",
-      "pre-push": "./test.js"
-    }
+  "dependencies": {
+    "mri": "1.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-github": "^5.1.8",
+    "eslint-plugin-jest": "^28.14.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "globals": "^16.4.0",
+    "jest": "^30.2.0",
+    "make-coverage-badge": "^1.2.0",
+    "prettier": "^3.0.0"
   }
 }
