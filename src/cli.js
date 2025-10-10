@@ -119,7 +119,7 @@ const { help, version: showVersion, ...params } = mri(args, options);
 
 if (showVersion) {
   process.stdout.write(`${version}\n`);
-  process.exit();
+  process.exit(0);
 }
 
 if (help) {
