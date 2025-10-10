@@ -4,13 +4,19 @@ const assert = require('assert')
 
 // Import the getBadge function logic (we'll need to extract it)
 const getColour = (coverage) => {
-  if (coverage < 80) {
-    return 'red'
+  if (coverage === 100) {
+    return '49c31a'
   }
-  if (coverage < 90) {
-    return 'yellow'
+  if (coverage >= 90) {
+    return '97c40f'
   }
-  return 'brightgreen'
+  if (coverage >= 80) {
+    return 'a0a127'
+  }
+  if (coverage >= 60) {
+    return 'cba317'
+  }
+  return 'ce0000'
 }
 
 const getBadge = (report, options = {}) => {
@@ -78,7 +84,7 @@ console.log('Running parameter tests...')
 
 // Test 1: No options
 const url1 = getBadge(report)
-assert.ok(url1.includes('Coverage-90%25-brightgreen.svg'))
+assert.ok(url1.includes('Coverage-90%25-97c40f.svg'))
 assert.ok(!url1.includes('?'))
 console.log('✓ Test 1: No options')
 
