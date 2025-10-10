@@ -40,6 +40,31 @@ Currently just reads from Istanbul's JSON summary reporter and downloads a badge
 
 Resulting badge will be in `./coverage/badge.svg`.
 
+### Examples
+
+Create a badge with a GitHub logo and blue label:
+
+```bash
+make-coverage-badge --logo github --label-color blue
+```
+
+Create a badge with a custom style and logo color:
+
+```bash
+make-coverage-badge --style flat-square --logo javascript --logo-color yellow
+```
+
+Create a badge with all customizations:
+
+```bash
+make-coverage-badge \
+  --label-color "#0969da" \
+  --logo github \
+  --logo-color white \
+  --style for-the-badge \
+  --link "https://github.com/yourorg/yourrepo"
+```
+
 ## Options
 
 ### `--output-path <path>`
@@ -49,6 +74,70 @@ Writes the coverage badge to the given path (relative to project root). Defaults
 ### `--report-path <path>`
 
 Path to a coverage report file. Defaults to `./coverage/coverage-summary.json`.
+
+### Badge Customization Options
+
+The following options allow you to customize the appearance of the badge using shields.io parameters:
+
+#### `--label-color <color>`
+
+Background color of the label (left side of the badge). Supports hex colors, named colors, etc.
+
+Example: `--label-color blue` or `--label-color "#0969da"`
+
+#### `--logo <slug>`
+
+Add a logo from [simple-icons](https://simpleicons.org/) to the badge.
+
+Example: `--logo github` or `--logo javascript`
+
+#### `--logo-color <color>`
+
+Color of the logo. Supports hex colors, named colors, etc.
+
+Example: `--logo-color white`
+
+#### `--logo-width <width>`
+
+Width of the logo in pixels.
+
+Example: `--logo-width 20`
+
+#### `--style <style>`
+
+Badge style. Available options:
+
+- `flat` (default)
+- `flat-square`
+- `plastic`
+- `for-the-badge`
+- `social`
+
+Example: `--style flat-square`
+
+#### `--prefix <text>`
+
+Text to prefix the coverage percentage.
+
+Example: `--prefix "v"`
+
+#### `--suffix <text>`
+
+Text to suffix the coverage percentage.
+
+Example: `--suffix " coverage"`
+
+#### `--cache-seconds <seconds>`
+
+HTTP cache duration in seconds.
+
+Example: `--cache-seconds 3600`
+
+#### `--link <url>`
+
+URL to link to when the badge is clicked. Can be used twice for separate left and right links.
+
+Example: `--link "https://github.com/yourorg/yourrepo"`
 
 ## Prior work
 
