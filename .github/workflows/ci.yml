@@ -37,3 +37,23 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Link package globally
+        run: npm link
+
+      - name: Run tests with coverage
+        run: npm run ci-test
+
+      - name: Test CLI version command
+        run: make-coverage-badge-better -v
+
+      - name: Generate coverage badge
+        run: make-coverage-badge-better --label-color '#333' --output-path ./temp/coverage.svg
+
+      - name: Verify badge was created
+        run: |
+          if [ ! -f ./temp/coverage.svg ]; then
+            echo "Error: Badge file was not created at ./temp/coverage.svg"
+            exit 1
+          fi
+          echo "✓ Badge file exists at ./temp/coverage.svg"

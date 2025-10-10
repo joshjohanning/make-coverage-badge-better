@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { get } from 'https';
-import { readFile, writeFile, mkdir } from 'fs';
+import { readFile, readFileSync, writeFile, mkdir, realpathSync } from 'fs';
 import { basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import mri from 'mri';
@@ -94,6 +94,7 @@ export const download = (url, cb) => {
 const options = {
   alias: {
     h: 'help',
+    v: 'version',
     outputPath: 'output-path',
     reportPath: 'report-path',
     labelColor: 'label-color',
@@ -101,7 +102,7 @@ const options = {
     logoWidth: 'logo-width',
     cacheSeconds: 'cache-seconds'
   },
-  boolean: 'help',
+  boolean: ['help', 'version'],
   default: {
     'output-path': './coverage/badge.svg',
     'report-path': './coverage/coverage-summary.json'
@@ -109,16 +110,27 @@ const options = {
 };
 
 const args = process.argv.slice(2);
-const { help, ...params } = mri(args, options);
+const { help, version: showVersion, ...params } = mri(args, options);
 
-// Only run CLI logic if this file is being executed directly (not imported)
-if (import.meta.url === `file://${process.argv[1]}`) {
-  if (help) {
-    process.stdout.write(
-      `usage: ${basename(__filename)} [options]
+if (showVersion) {
+  try {
+    const packageJsonPath = new URL('../package.json', import.meta.url);
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+    process.stdout.write(`${packageJson.version}\n`);
+  } catch (err) {
+    process.stderr.write(`Error reading version: ${err.message}\n`);
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+if (help) {
+  process.stdout.write(
+    `usage: ${basename(__filename)} [options]
 
 Options:
   -h, --help                Show this help message
+  -v, --version             Show version number
   --report-path <path>      Path to coverage report (default: ./coverage/coverage-summary.json)
   --output-path <path>      Output path for badge (default: ./coverage/badge.svg)
   --label-color <color>     Background color of the label (left side)
@@ -130,10 +142,30 @@ Options:
   --suffix <text>           Suffix for the coverage percentage
   --cache-seconds <seconds> HTTP cache duration in seconds
   --link <url>              URL to link to (can be used twice for left and right links)\n`
-    );
-    process.exit();
-  }
+  );
+  process.exit();
+}
 
+// Only run CLI when executed directly (not when imported as a module)
+// Check if this file is being run directly by comparing resolved paths
+
+// Matches 'cli.js' or 'cli.<random-id>.js' (npx creates temp files with random IDs)
+// Examples: 'cli.js', 'cli.abc123.js', 'cli.xyz-456.js'
+const CLI_FILENAME_PATTERN = /cli(\.[a-zA-Z0-9_-]+)?\.js$/;
+
+const isMainModule = () => {
+  try {
+    // Resolve both paths to handle symlinks (from npm link)
+    const scriptPath = realpathSync(process.argv[1]);
+    const modulePath = realpathSync(__filename);
+    return scriptPath === modulePath;
+  } catch {
+    // Fallback check: handle npx temp files and direct execution
+    return process.argv[1] && CLI_FILENAME_PATTERN.test(basename(process.argv[1]));
+  }
+};
+
+if (isMainModule()) {
   const {
     outputPath,
     'report-path': reportPath,

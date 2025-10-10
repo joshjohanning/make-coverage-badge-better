@@ -1,6 +1,6 @@
 {
   "name": "@joshjohanning/make-coverage-badge-better",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create a coverage badge - but better",
   "type": "module",
   "main": "src/cli.js",
