@@ -111,11 +111,9 @@ const options = {
 const args = process.argv.slice(2);
 const { help, ...params } = mri(args, options);
 
-// Only run CLI logic if this file is being executed directly (not imported)
-if (import.meta.url === `file://${process.argv[1]}`) {
-  if (help) {
-    process.stdout.write(
-      `usage: ${basename(__filename)} [options]
+if (help) {
+  process.stdout.write(
+    `usage: ${basename(__filename)} [options]
 
 Options:
   -h, --help                Show this help message
@@ -130,51 +128,50 @@ Options:
   --suffix <text>           Suffix for the coverage percentage
   --cache-seconds <seconds> HTTP cache duration in seconds
   --link <url>              URL to link to (can be used twice for left and right links)\n`
-    );
-    process.exit();
-  }
+  );
+  process.exit();
+}
 
-  const {
-    outputPath,
-    'report-path': reportPath,
-    'label-color': labelColor,
+const {
+  outputPath,
+  'report-path': reportPath,
+  'label-color': labelColor,
+  logo,
+  'logo-color': logoColor,
+  'logo-width': logoWidth,
+  style,
+  prefix,
+  suffix,
+  'cache-seconds': cacheSeconds,
+  link
+} = params;
+
+readFile(reportPath, 'utf8', (err, res) => {
+  if (err) throw err;
+  const report = JSON.parse(res);
+
+  const badgeOptions = {
+    labelColor,
     logo,
-    'logo-color': logoColor,
-    'logo-width': logoWidth,
+    logoColor,
+    logoWidth,
     style,
     prefix,
     suffix,
-    'cache-seconds': cacheSeconds,
+    cacheSeconds,
     link
-  } = params;
+  };
 
-  readFile(reportPath, 'utf8', (err, res) => {
-    if (err) throw err;
-    const report = JSON.parse(res);
-
-    const badgeOptions = {
-      labelColor,
-      logo,
-      logoColor,
-      logoWidth,
-      style,
-      prefix,
-      suffix,
-      cacheSeconds,
-      link
-    };
-
-    const url = getBadge(report, badgeOptions);
-    download(url, (downloadErr, downloadRes) => {
-      if (downloadErr) throw downloadErr;
-      const dir = dirname(outputPath);
-      mkdir(dir, { recursive: true }, mkdirErr => {
-        if (mkdirErr) throw mkdirErr;
-        writeFile(outputPath, downloadRes, 'utf8', writeErr => {
-          if (writeErr) throw writeErr;
-          process.stdout.write(`Wrote coverage badge to: ${outputPath}\n`);
-        });
+  const url = getBadge(report, badgeOptions);
+  download(url, (downloadErr, downloadRes) => {
+    if (downloadErr) throw downloadErr;
+    const dir = dirname(outputPath);
+    mkdir(dir, { recursive: true }, mkdirErr => {
+      if (mkdirErr) throw mkdirErr;
+      writeFile(outputPath, downloadRes, 'utf8', writeErr => {
+        if (writeErr) throw writeErr;
+        process.stdout.write(`Wrote coverage badge to: ${outputPath}\n`);
       });
     });
   });
-}
+});
