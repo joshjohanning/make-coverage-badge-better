@@ -154,7 +154,7 @@ const isMainModule = () => {
     return scriptPath === modulePath;
   } catch {
     // Fallback check
-    return process.argv[1] && process.argv[1].endsWith('cli.js');
+    return process.argv[1] && basename(process.argv[1]) === 'cli.js';
   }
 };
 
