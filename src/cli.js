@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { get } from 'https';
-import { readFile, readFileSync, writeFile, mkdir } from 'fs';
+import { readFile, readFileSync, writeFile, mkdir, realpathSync } from 'fs';
 import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import mri from 'mri';
@@ -145,7 +145,20 @@ Options:
 }
 
 // Only run CLI when executed directly (not when imported as a module)
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Check if this file is being run directly by comparing resolved paths
+const isMainModule = () => {
+  try {
+    // Resolve both paths to handle symlinks (from npm link)
+    const scriptPath = realpathSync(process.argv[1]);
+    const modulePath = realpathSync(__filename);
+    return scriptPath === modulePath;
+  } catch {
+    // Fallback check
+    return process.argv[1] && process.argv[1].endsWith('cli.js');
+  }
+};
+
+if (isMainModule()) {
   const {
     outputPath,
     'report-path': reportPath,
