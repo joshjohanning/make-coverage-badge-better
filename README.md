@@ -3,7 +3,7 @@
 [![GitHub release](https://img.shields.io/github/release/joshjohanning/make-coverage-badge-better.svg?logo=github&labelColor=333)](https://github.com/joshjohanning/make-coverage-badge-better/releases)
 [![CI](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/ci.yml/badge.svg)](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/ci.yml)
 [![Publish GitHub Action](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/publish.yml/badge.svg)](https://github.com/joshjohanning/nodejs-actions-starter-template/actions/workflows/publish.yml)
-![Coverage](./badges/coverage.svg)
+![Coverage](https://raw.githubusercontent.com/joshjohanning/make-coverage-badge-better/main/badges/coverage.svg)
 
 > Create a coverage badge - but better
 
